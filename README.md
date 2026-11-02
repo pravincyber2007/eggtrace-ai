@@ -13,4 +13,10 @@ Farm-to-destination tracking of egg batches with QR handovers, inspection record
 5. [Expected Outcomes](docs/05-expected-outcomes.md)
 6. [Initial Prototype / Solution Design](docs/06-solution-design.md)
 
+## Product Documents (living, updated during development)
+
+- [MRD: Market Requirements](docs/product/MRD.md)
+- [PRD: Product Requirements](docs/product/PRD.md)
+- [Epics and User Stories](docs/product/EPICS-AND-STORIES.md)
+
 **Stack:** React · Node.js · PostgreSQL · QR scanning · OpenCV
