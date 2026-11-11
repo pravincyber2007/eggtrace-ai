@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import api from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { Spinner, ErrorBanner, Modal, Field, StatusBadge } from "../components/ui";
+import HandoverModal from "../components/HandoverModal";
 
 export default function BatchDetailPage() {
   const { id } = useParams();
@@ -11,6 +12,7 @@ export default function BatchDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [splitOpen, setSplitOpen] = useState(false);
+  const [handoverOpen, setHandoverOpen] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -32,6 +34,7 @@ export default function BatchDetailPage() {
   if (!batch) return <ErrorBanner message={error || "Not found"} />;
 
   const canSplit = user?.role === "logistics" || user?.role === "admin";
+  const canHandover = user?.role === "logistics" || user?.role === "admin" || user?.role === "farm";
 
   return (
     <div>
@@ -47,7 +50,10 @@ export default function BatchDetailPage() {
             {batch.parent && <Link to={`/batches/${batch.parent.id}`} className="text-xs text-slate-500 hover:underline">child of {batch.parent.id}</Link>}
           </div>
         </div>
-        {canSplit && <button className="btn-secondary" onClick={() => setSplitOpen(true)}>Split batch</button>}
+        <div className="flex gap-2">
+          {canHandover && <button className="btn-primary" onClick={() => setHandoverOpen(true)}>Record handover</button>}
+          {canSplit && <button className="btn-secondary" onClick={() => setSplitOpen(true)}>Split batch</button>}
+        </div>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-3">
@@ -94,6 +100,7 @@ export default function BatchDetailPage() {
       <Timeline batch={batch} />
 
       <SplitModal open={splitOpen} onClose={() => setSplitOpen(false)} batch={batch} onDone={() => { setSplitOpen(false); load(); }} />
+      <HandoverModal open={handoverOpen} onClose={() => setHandoverOpen(false)} batch={batch} onDone={() => { setHandoverOpen(false); load(); }} />
     </div>
   );
 }
