@@ -5,6 +5,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import UsersPage from "./pages/UsersPage";
 import MasterDataPage from "./pages/MasterDataPage";
+import BatchesPage from "./pages/BatchesPage";
+import BatchDetailPage from "./pages/BatchDetailPage";
 
 // Placeholder for pages delivered in later epics.
 function Placeholder({ title }) {
@@ -33,7 +35,8 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
 
       <Route path="/" element={<Shell><Placeholder title="Dashboard" /></Shell>} />
-      <Route path="/batches" element={<Shell><Placeholder title="Batches" /></Shell>} />
+      <Route path="/batches" element={<Shell><BatchesPage /></Shell>} />
+      <Route path="/batches/:id" element={<Shell><BatchDetailPage /></Shell>} />
       <Route path="/scan" element={<Shell roles={["admin", "logistics"]}><Placeholder title="Scan & Handover" /></Shell>} />
       <Route path="/recall" element={<Shell><Placeholder title="Search & Recall" /></Shell>} />
       <Route path="/master-data" element={<Shell roles={["admin", "farm"]}><MasterDataPage /></Shell>} />
