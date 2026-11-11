@@ -10,6 +10,7 @@ import farmRoutes from "./routes/farms.js";
 import flockRoutes from "./routes/flocks.js";
 import partyRoutes from "./routes/parties.js";
 import batchRoutes from "./routes/batches.js";
+import inspectionRoutes from "./routes/inspections.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/farms", farmRoutes);
 app.use("/api/flocks", flockRoutes);
 app.use("/api/parties", partyRoutes);
 app.use("/api/batches", batchRoutes);
+app.use("/api/inspections", inspectionRoutes);
 
 // 404 for unknown API routes
 app.use("/api", (_req, res) => res.status(404).json({ error: "Not found" }));
