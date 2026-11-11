@@ -1,0 +1,149 @@
+// EggTrace AI - Prisma schema
+// Local dev: SQLite (zero setup). For production, set provider = "postgresql"
+// and DATABASE_URL to a Neon/Supabase connection string. Models are portable.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------- E1: Auth & users ----------------
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String // admin | farm | inspector | logistics | buyer
+  partyId      String? // logistics/buyer users may be linked to a party
+  party        Party?   @relation(fields: [partyId], references: [id])
+  createdAt    DateTime @default(now())
+
+  batchesCreated     Batch[]      @relation("BatchCreatedBy")
+  inspections        Inspection[]
+  movementsRecorded  Movement[]
+  recallsCreated     Recall[]
+}
+
+// ---------------- E2: Master data ----------------
+model Farm {
+  id        String   @id @default(cuid())
+  name      String
+  location  String
+  licenceNo String
+  createdAt DateTime @default(now())
+
+  flocks  Flock[]
+  batches Batch[]
+}
+
+model Flock {
+  id            String   @id @default(cuid())
+  farmId        String
+  farm          Farm     @relation(fields: [farmId], references: [id])
+  breed         String
+  birdCount     Int
+  placementDate DateTime
+  createdAt     DateTime @default(now())
+
+  batches Batch[]
+}
+
+model Party {
+  id        String   @id @default(cuid())
+  name      String
+  type      String // collection_centre | warehouse | transporter | buyer
+  contact   String?
+  location  String?
+  createdAt DateTime @default(now())
+
+  users            User[]
+  heldBatches      Batch[]        @relation("CurrentHolder")
+  movementsFrom    Movement[]     @relation("MovementFrom")
+  movementsTo      Movement[]     @relation("MovementTo")
+  recallParties    RecallParty[]
+}
+
+// ---------------- E3: Batches ----------------
+model Batch {
+  id                   String   @id // EGG-<farm>-<yyyymmdd>-<seq>
+  farmId               String
+  farm                 Farm     @relation(fields: [farmId], references: [id])
+  flockId              String
+  flock                Flock    @relation(fields: [flockId], references: [id])
+  layDate              DateTime
+  quantity             Int
+  status               String   @default("At farm") // At farm | In transit | Delivered | Recalled
+  parentId             String?
+  parent               Batch?   @relation("BatchSplit", fields: [parentId], references: [id])
+  children             Batch[]  @relation("BatchSplit")
+  currentHolderPartyId String?
+  currentHolder        Party?   @relation("CurrentHolder", fields: [currentHolderPartyId], references: [id])
+  createdById          String
+  createdBy            User     @relation("BatchCreatedBy", fields: [createdById], references: [id])
+  createdAt            DateTime @default(now())
+
+  inspections   Inspection[]
+  movements     Movement[]
+  recallParties RecallParty[]
+}
+
+// ---------------- E4: Inspections ----------------
+model Inspection {
+  id            String   @id @default(cuid())
+  batchId       String
+  batch         Batch    @relation(fields: [batchId], references: [id])
+  inspectorId   String
+  inspector     User     @relation(fields: [inspectorId], references: [id])
+  grade         String // A | B | C | Reject
+  defectCount   Int      @default(0)
+  rejectedCount Int      @default(0)
+  remarks       String?
+  photoPath     String?
+  createdAt     DateTime @default(now())
+}
+
+// ---------------- E5: Movements / handover ----------------
+model Movement {
+  id           String   @id @default(cuid())
+  batchId      String
+  batch        Batch    @relation(fields: [batchId], references: [id])
+  fromPartyId  String?
+  fromParty    Party?   @relation("MovementFrom", fields: [fromPartyId], references: [id])
+  toPartyId    String
+  toParty      Party    @relation("MovementTo", fields: [toPartyId], references: [id])
+  quantity     Int
+  location     String?
+  temperature  Float?
+  recordedById String
+  recordedBy   User     @relation(fields: [recordedById], references: [id])
+  createdAt    DateTime @default(now())
+}
+
+// ---------------- E6: Recall ----------------
+model Recall {
+  id          String   @id @default(cuid())
+  reason      String
+  status      String   @default("Open") // Open | Closed
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  parties RecallParty[]
+}
+
+model RecallParty {
+  id        String   @id @default(cuid())
+  recallId  String
+  recall    Recall   @relation(fields: [recallId], references: [id])
+  partyId   String
+  party     Party    @relation(fields: [partyId], references: [id])
+  batchId   String
+  batch     Batch    @relation(fields: [batchId], references: [id])
+  quantity  Int
+  status    String   @default("Notified") // Notified | Acknowledged | Returned
+  createdAt DateTime @default(now())
+}

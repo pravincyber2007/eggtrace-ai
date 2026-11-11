@@ -1,0 +1,23 @@
+import axios from "axios";
+
+const api = axios.create({ baseURL: "/api" });
+
+// Attach JWT from localStorage on every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("eggtrace_token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// On 401, clear token (session expired)
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401 && localStorage.getItem("eggtrace_token")) {
+      localStorage.removeItem("eggtrace_token");
+    }
+    return Promise.reject(err);
+  }
+);
+
+export default api;
