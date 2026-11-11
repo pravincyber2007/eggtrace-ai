@@ -8,6 +8,7 @@ import MasterDataPage from "./pages/MasterDataPage";
 import BatchesPage from "./pages/BatchesPage";
 import BatchDetailPage from "./pages/BatchDetailPage";
 import ScanPage from "./pages/ScanPage";
+import RecallPage from "./pages/RecallPage";
 
 // Placeholder for pages delivered in later epics.
 function Placeholder({ title }) {
@@ -39,7 +40,7 @@ export default function App() {
       <Route path="/batches" element={<Shell><BatchesPage /></Shell>} />
       <Route path="/batches/:id" element={<Shell><BatchDetailPage /></Shell>} />
       <Route path="/scan" element={<Shell roles={["admin", "logistics"]}><ScanPage /></Shell>} />
-      <Route path="/recall" element={<Shell><Placeholder title="Search & Recall" /></Shell>} />
+      <Route path="/recall" element={<Shell><RecallPage /></Shell>} />
       <Route path="/master-data" element={<Shell roles={["admin", "farm"]}><MasterDataPage /></Shell>} />
       <Route path="/users" element={<Shell roles={["admin"]}><UsersPage /></Shell>} />
 

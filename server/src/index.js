@@ -12,6 +12,8 @@ import partyRoutes from "./routes/parties.js";
 import batchRoutes from "./routes/batches.js";
 import inspectionRoutes from "./routes/inspections.js";
 import movementRoutes from "./routes/movements.js";
+import traceRoutes from "./routes/trace.js";
+import recallRoutes from "./routes/recalls.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -32,6 +34,8 @@ app.use("/api/parties", partyRoutes);
 app.use("/api/batches", batchRoutes);
 app.use("/api/inspections", inspectionRoutes);
 app.use("/api/movements", movementRoutes);
+app.use("/api/trace", traceRoutes);
+app.use("/api/recalls", recallRoutes);
 
 // 404 for unknown API routes
 app.use("/api", (_req, res) => res.status(404).json({ error: "Not found" }));
