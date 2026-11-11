@@ -9,6 +9,7 @@ import BatchesPage from "./pages/BatchesPage";
 import BatchDetailPage from "./pages/BatchDetailPage";
 import ScanPage from "./pages/ScanPage";
 import RecallPage from "./pages/RecallPage";
+import ConsumerPage from "./pages/ConsumerPage";
 
 // Placeholder for pages delivered in later epics.
 function Placeholder({ title }) {
@@ -35,6 +36,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/t/:batchId" element={<ConsumerPage />} />
 
       <Route path="/" element={<Shell><Placeholder title="Dashboard" /></Shell>} />
       <Route path="/batches" element={<Shell><BatchesPage /></Shell>} />

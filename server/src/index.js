@@ -14,6 +14,7 @@ import inspectionRoutes from "./routes/inspections.js";
 import movementRoutes from "./routes/movements.js";
 import traceRoutes from "./routes/trace.js";
 import recallRoutes from "./routes/recalls.js";
+import publicRoutes from "./routes/public.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -36,6 +37,7 @@ app.use("/api/inspections", inspectionRoutes);
 app.use("/api/movements", movementRoutes);
 app.use("/api/trace", traceRoutes);
 app.use("/api/recalls", recallRoutes);
+app.use("/api/public", publicRoutes);
 
 // 404 for unknown API routes
 app.use("/api", (_req, res) => res.status(404).json({ error: "Not found" }));
