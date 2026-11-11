@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
+import farmRoutes from "./routes/farms.js";
+import flockRoutes from "./routes/flocks.js";
+import partyRoutes from "./routes/parties.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -20,6 +23,9 @@ app.get("/api/health", (_req, res) => res.json({ ok: true, service: "eggtrace-ap
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/farms", farmRoutes);
+app.use("/api/flocks", flockRoutes);
+app.use("/api/parties", partyRoutes);
 
 // 404 for unknown API routes
 app.use("/api", (_req, res) => res.status(404).json({ error: "Not found" }));
