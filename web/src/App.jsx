@@ -10,16 +10,7 @@ import BatchDetailPage from "./pages/BatchDetailPage";
 import ScanPage from "./pages/ScanPage";
 import RecallPage from "./pages/RecallPage";
 import ConsumerPage from "./pages/ConsumerPage";
-
-// Placeholder for pages delivered in later epics.
-function Placeholder({ title }) {
-  return (
-    <div className="card p-8 text-center">
-      <h1 className="text-xl font-bold text-slate-900">{title}</h1>
-      <p className="mt-2 text-sm text-slate-500">Coming in a later epic.</p>
-    </div>
-  );
-}
+import DashboardPage from "./pages/DashboardPage";
 
 function Shell({ children, roles }) {
   return (
@@ -38,7 +29,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/t/:batchId" element={<ConsumerPage />} />
 
-      <Route path="/" element={<Shell><Placeholder title="Dashboard" /></Shell>} />
+      <Route path="/" element={<Shell><DashboardPage /></Shell>} />
       <Route path="/batches" element={<Shell><BatchesPage /></Shell>} />
       <Route path="/batches/:id" element={<Shell><BatchDetailPage /></Shell>} />
       <Route path="/scan" element={<Shell roles={["admin", "logistics"]}><ScanPage /></Shell>} />
